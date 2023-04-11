@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -16,7 +18,7 @@ const (
 	address = "localhost:50051"
 )
 
-func main() {
+func fileStreaming(filePath string, filename string) {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -24,10 +26,9 @@ func main() {
 	}
 	defer conn.Close()
 	c := pb.NewFileTransferClient(conn)
-
 	// Open the file to send.
-	filename := "test.txt"
-	file, err := os.Open(filename)
+	// filename := "test.txt"
+	file, err := os.Open(filePath + filename)
 	if err != nil {
 		log.Fatalf("could not open file: %v", err)
 	}
@@ -61,4 +62,19 @@ func main() {
 		log.Fatalf("could not receive response: %v", err)
 	}
 	log.Printf("Response: %v", resp)
+}
+
+func main() {
+	const thePath string = "/var/log/vigilant-guard/"
+	//Get Logs:
+	files, err := ioutil.ReadDir(thePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range files {
+		fmt.Println(file.Name(), file.IsDir())
+		fileStreaming(thePath, file.Name())
+	}
+	fmt.Println("Done!")
 }

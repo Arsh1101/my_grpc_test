@@ -37,7 +37,7 @@ func (s *server) SendFile(stream pb.FileTransfer_SendFileServer) error {
 	}
 
 	// Save the received file to disk with the exact filename
-	file, err := os.Create(filename)
+	file, err := os.Create("./logs/" + filename)
 	if err != nil {
 		return err
 	}
