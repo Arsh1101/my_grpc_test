@@ -8,7 +8,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	pb "example.com/go-grpc"
+	pb "example.com/go-grpc/filestream"
 )
 
 func main() {
