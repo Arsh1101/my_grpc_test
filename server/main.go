@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net"
+	"os"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -25,7 +25,6 @@ func (s *server) SendFile(stream pb.FileTransfer_SendFileServer) error {
 	var data []byte
 	for {
 		chunk, err := stream.Recv()
-		fmt.Println(chunk)
 		if err == io.EOF {
 			break
 		}
@@ -35,7 +34,16 @@ func (s *server) SendFile(stream pb.FileTransfer_SendFileServer) error {
 		data = append(data, chunk.Data...)
 	}
 
-	// TODO: Save the received file to disk
+	// Save the received file to disk
+	file, err := os.Create("received-file.txt")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	if _, err := file.Write(data); err != nil {
+		return err
+	}
 
 	// Send the status back to the client
 	return stream.SendAndClose(&pb.SendStatus{
