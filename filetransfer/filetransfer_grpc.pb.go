@@ -43,7 +43,7 @@ func (c *fileTransferClient) SendFile(ctx context.Context, opts ...grpc.CallOpti
 }
 
 type FileTransfer_SendFileClient interface {
-	Send(*FileChunk) error
+	Send(*SendFileRequest) error
 	CloseAndRecv() (*SendStatus, error)
 	grpc.ClientStream
 }
@@ -52,7 +52,7 @@ type fileTransferSendFileClient struct {
 	grpc.ClientStream
 }
 
-func (x *fileTransferSendFileClient) Send(m *FileChunk) error {
+func (x *fileTransferSendFileClient) Send(m *SendFileRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
@@ -101,7 +101,7 @@ func _FileTransfer_SendFile_Handler(srv interface{}, stream grpc.ServerStream) e
 
 type FileTransfer_SendFileServer interface {
 	SendAndClose(*SendStatus) error
-	Recv() (*FileChunk, error)
+	Recv() (*SendFileRequest, error)
 	grpc.ServerStream
 }
 
@@ -113,8 +113,8 @@ func (x *fileTransferSendFileServer) SendAndClose(m *SendStatus) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *fileTransferSendFileServer) Recv() (*FileChunk, error) {
-	m := new(FileChunk)
+func (x *fileTransferSendFileServer) Recv() (*SendFileRequest, error) {
+	m := new(SendFileRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}

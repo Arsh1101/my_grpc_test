@@ -26,7 +26,8 @@ func main() {
 	c := pb.NewFileTransferClient(conn)
 
 	// Open the file to send.
-	file, err := os.Open("test.txt")
+	filename := "test.txt"
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatalf("could not open file: %v", err)
 	}
@@ -38,7 +39,7 @@ func main() {
 		log.Fatalf("could not send file: %v", err)
 	}
 
-	// Send the file chunks to the server.
+	// Send the filename and file data to the server.
 	chunkSize := 1024 // 1KB
 	buf := make([]byte, chunkSize)
 	for {
@@ -49,7 +50,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("could not read file: %v", err)
 		}
-		if err := stream.Send(&pb.FileChunk{Data: buf[:n]}); err != nil {
+		if err := stream.Send(&pb.SendFileRequest{Filename: filename, Data: buf[:n]}); err != nil {
 			log.Fatalf("could not send chunk: %v", err)
 		}
 	}

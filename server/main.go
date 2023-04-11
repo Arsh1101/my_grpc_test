@@ -22,6 +22,7 @@ type server struct {
 
 func (s *server) SendFile(stream pb.FileTransfer_SendFileServer) error {
 	// Receive the file chunks from the client
+	var filename string
 	var data []byte
 	for {
 		chunk, err := stream.Recv()
@@ -31,11 +32,12 @@ func (s *server) SendFile(stream pb.FileTransfer_SendFileServer) error {
 		if err != nil {
 			return err
 		}
+		filename = chunk.Filename
 		data = append(data, chunk.Data...)
 	}
 
-	// Save the received file to disk
-	file, err := os.Create("received-file.txt")
+	// Save the received file to disk with the exact filename
+	file, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
