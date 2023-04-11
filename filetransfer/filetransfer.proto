@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package filestream;
+
+option go_package = "example.com/go-grpc";
+
+service FileTransfer {
+  rpc SendFile (stream FileChunk) returns (SendStatus) {}
+}
+
+message FileChunk {
+  bytes data = 1;
+}
+
+message SendStatus {
+  bool success = 1;
+  string message = 2;
+}
