@@ -4,7 +4,7 @@
 // - protoc             v3.19.6
 // source: filestream.proto
 
-package go_grpc
+package filestream
 
 import (
 	context "context"

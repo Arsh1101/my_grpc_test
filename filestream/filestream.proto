@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package filestream;
 
-option go_package = "example.com/go-grpc";
+option go_package = "github.com/Arsh1101/my_grpc_test;filestream";
 
 service FileService {
   rpc SendFile(stream FileChunk) returns (FileUploadStatus) {}
