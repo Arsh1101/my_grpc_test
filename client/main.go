@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	address        = "localhost:50051"
-	thePath string = "/var/log/vigilant-guard/"
+	address = "localhost:50051"
+	thePath = "/var/log/vigilant-guard/"
 )
 
 func fileStreaming(filePath string, filename string) {
