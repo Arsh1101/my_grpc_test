@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -15,7 +14,8 @@ import (
 )
 
 const (
-	address = "localhost:50051"
+	address        = "localhost:50051"
+	thePath string = "/var/log/vigilant-guard/"
 )
 
 func fileStreaming(filePath string, filename string) {
@@ -27,7 +27,6 @@ func fileStreaming(filePath string, filename string) {
 	defer conn.Close()
 	c := pb.NewFileTransferClient(conn)
 	// Open the file to send.
-	// filename := "test.txt"
 	file, err := os.Open(filePath + filename)
 	if err != nil {
 		log.Fatalf("could not open file: %v", err)
@@ -65,9 +64,8 @@ func fileStreaming(filePath string, filename string) {
 }
 
 func main() {
-	const thePath string = "/var/log/vigilant-guard/"
 	//Get Logs:
-	files, err := ioutil.ReadDir(thePath)
+	files, err := os.ReadDir(thePath)
 	if err != nil {
 		log.Fatal(err)
 	}
